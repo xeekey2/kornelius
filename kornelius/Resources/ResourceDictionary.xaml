@@ -7,7 +7,7 @@
     <Converters:BooleanNotConverter x:Key="BooleanNotConverter"/>
 
     <Style x:Key="CustomButtonStyle" TargetType="Button">
-        <Setter Property="Background" Value="#FF1E90FF"/>
+        <Setter Property="Background" Value="#E7E7E7"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="BorderBrush" Value="#FF1E90FF"/>
         <Setter Property="BorderThickness" Value="1"/>
@@ -30,7 +30,43 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        
+
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Content, RelativeSource={RelativeSource Self}}" Value="START">
+                <Setter Property="Background" Value="Green"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Content, RelativeSource={RelativeSource Self}}" Value="PAUSE">
+                <Setter Property="Background" Value="RED"/>
+            </DataTrigger>
+
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="CustomCancelButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="Red"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="#FF1E90FF"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="5">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          TextBlock.TextAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Background" Value="#E7E7E7"/>

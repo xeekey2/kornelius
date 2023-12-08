@@ -58,7 +58,7 @@
                     <ComboBox Style="{StaticResource TransparentComboBox}" 
                               ItemsSource="{Binding Issues}" 
                               SelectedItem="{Binding SelectedIssue, Mode=TwoWay}" 
-                              DisplayMemberPath="Summary"
+                              DisplayMemberPath="fields.summary"
                               x:Name="IssueComboBox" 
                               Grid.Row="2" 
                               Margin="0,5,74,5"/>
@@ -69,13 +69,10 @@
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="29*"/>
-                            <ColumnDefinition Width="12*"/>
-                            <ColumnDefinition Width="17*"/>
                             <ColumnDefinition Width="29*"/>
                         </Grid.ColumnDefinitions>
-                        <Button Style="{StaticResource CustomButtonStyle}" Command="{Binding StartCommand}" IsEnabled="{Binding IsStarted, Converter={StaticResource BooleanNotConverter}}" Content="START" Grid.Column="0" Margin="5,0,5,0" Padding="10" Background="#75C791" Foreground="White"/>
-                        <Button Style="{StaticResource CustomButtonStyle}" Command="{Binding StopCommand}" IsEnabled="{Binding IsStarted}" Content="STOP" Grid.Column="1" Margin="5,0,5,0" Padding="10"  Foreground="White" Grid.ColumnSpan="2"/>
-                        <Button Style="{StaticResource CustomButtonStyle}" Command="{Binding CancelCommand}" IsEnabled="{Binding IsStarted}" Content="CANCEL" Grid.Column="3" Margin="5,0,5,0" Foreground="White" Padding="10"/>
+                        <Button Style="{StaticResource CustomButtonStyle}" Command="{Binding ToggleStartStopCommand}" Content="{Binding StartStopButtonText}" Grid.Column="0" Margin="5,0,5,0" Padding="10"/>
+                        <Button Style="{StaticResource CustomCancelButtonStyle}" Command="{Binding CancelCommand}" Content="CLEAR" Grid.Column="3" Margin="5,0,5,0" Foreground="White" Padding="10"/>
                     </Grid>
                 </Grid>
 

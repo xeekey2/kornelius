@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using kornelius.Models;
+using kornelius.Services;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace kornelius.ViewModels
@@ -18,20 +20,21 @@ namespace kornelius.ViewModels
         private ObservableCollection<string> sprints;
         [ObservableProperty]
         private string selectedSprint;
-
+        [ObservableProperty]
+        private string startStopButtonText = "START";
         [ObservableProperty]
         private bool isStarted;
+
         public JiraViewModel()
         {
             Issues = new ObservableCollection<Issue>();
             Sprints = new ObservableCollection<string>();
-            IsStarted = false;
         }
 
         [RelayCommand]
         public async Task LoadIssuesAsync()
         {
-            var issuesFromDatabase = await Jira.GetIssuesAsync("KASPER", SelectedSprint); // Make sure this method is async
+            var issuesFromDatabase = await IssueService.GetIssuesForSprintByAssignee(42, "KASPER"); // Make sure this method is async
             Issues.Clear();
             foreach (var issue in issuesFromDatabase)
             {
@@ -53,21 +56,44 @@ namespace kornelius.ViewModels
         }
 
         [RelayCommand]
-        public void Start()
+        private void ToggleStartStop()
+        {
+            if (IsStarted)
+            {
+                Stop(); // This method sets IsStarted to false and performs stop logic
+            }
+            else
+            {
+                Start(); // This method sets IsStarted to true and performs start logic
+            }
+        }
+
+        private void Start()
         {
             IsStarted = true;
+            StartStopButtonText = "PAUSE";
+
         }
 
-        [RelayCommand]
-        public void Stop()
+        private void Stop()
         {
             IsStarted = false;
+            StartStopButtonText = "START";
         }
 
-        [RelayCommand]
-        public void Cancel()
+        [RelayCommand(CanExecute = nameof(CanStopOrCancel))]
+        private void Cancel()
         {
             IsStarted = false;
+            Stop();
+        }
+
+        private bool CanStart() => !IsStarted;
+        private bool CanStopOrCancel() => IsStarted;
+
+        partial void OnIsStartedChanged(bool isStarted)
+        {
+            CancelCommand.NotifyCanExecuteChanged();
         }
 
         partial void OnSelectedSprintChanged(string value)
