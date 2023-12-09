@@ -31,12 +31,7 @@ namespace kornelius
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            var viewModel = DataContext as JiraViewModel;
-            if (viewModel != null)
-            {
-                await viewModel.LoadSprintsAsync();
-                await viewModel.LoadIssuesAsync();
-            }
+
         }
     }
 }

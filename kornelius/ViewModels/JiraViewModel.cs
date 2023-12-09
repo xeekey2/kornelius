@@ -15,11 +15,14 @@ namespace kornelius.ViewModels
         private ObservableCollection<Issue> issues;
         [ObservableProperty]
         private Issue selectedIssue;
-
         [ObservableProperty]
-        private ObservableCollection<string> sprints;
+        private ObservableCollection<Sprint> sprints;
         [ObservableProperty]
-        private string selectedSprint;
+        private ObservableCollection<Board> boards;
+        [ObservableProperty]
+        private Sprint selectedSprint;
+        [ObservableProperty]
+        private string selectedBoard;
         [ObservableProperty]
         private string startStopButtonText = "START";
         [ObservableProperty]
@@ -27,32 +30,77 @@ namespace kornelius.ViewModels
 
         public JiraViewModel()
         {
+            Boards = new ObservableCollection<Board>();
+            Sprints = new ObservableCollection<Sprint>();
             Issues = new ObservableCollection<Issue>();
-            Sprints = new ObservableCollection<string>();
+        }
+
+        public async Task InitializeAsync()
+        {
+            await LoadBoardsAsync();
+            await LoadSprintsAsync();
+            await LoadIssuesAsync();
         }
 
         [RelayCommand]
         public async Task LoadIssuesAsync()
         {
-            var issuesFromDatabase = await IssueService.GetIssuesForSprintByAssignee(42, "KASPER"); // Make sure this method is async
-            Issues.Clear();
-            foreach (var issue in issuesFromDatabase)
+            if (SelectedSprint == null)
             {
-                Issues.Add(issue);
+                var issues = await IssueService.GetIssuesForBoardAndAssignee(SelectedBoard, "KASPER");
+                Issues.Clear();
+                foreach (var issue in issues)
+                {
+                    Issues.Add(issue);
+                }
+                SelectedIssue = Issues.FirstOrDefault();
             }
-            SelectedIssue = Issues.FirstOrDefault();
+            else
+            {
+                var issues = await IssueService.GetIssuesForSprintByAssignee(SelectedSprint.id, "KASPER");
+                Issues.Clear();
+                foreach (var issue in issues)
+                {
+                    Issues.Add(issue);
+                }
+                SelectedIssue = Issues.FirstOrDefault();
+            }
         }
 
         [RelayCommand]
         public async Task LoadSprintsAsync()
         {
-            var sprints = await Jira.GetSprintsAsync();
-            Sprints.Clear();
-            foreach (var sprint in sprints)
+            var sprint = await IssueService.GetSprintsByBoardName(SelectedBoard);
+            if (sprint == null)
             {
-                Sprints.Add(sprint);
+                Sprints.Clear();
+                SelectedSprint = null;
+                return;
             }
+
+            Sprints.Clear();
+            Sprints.Add(sprint);
             SelectedSprint = Sprints.FirstOrDefault();
+        }
+
+        [RelayCommand]
+        public async Task LoadBoardsAsync()
+        {
+            var boards = await IssueService.GetBoards();
+            Boards.Clear();
+            foreach (var board in boards)
+            {
+                Boards.Add(board);
+            }
+
+            if (SelectedBoard != null)
+            {
+                SelectedBoard = Boards.FirstOrDefault().name;
+            }
+            else
+            {
+                SelectedBoard = Boards.FirstOrDefault(x => x.name.ToString() == "Scrum").name;
+            }
         }
 
         [RelayCommand]
@@ -96,12 +144,15 @@ namespace kornelius.ViewModels
             CancelCommand.NotifyCanExecuteChanged();
         }
 
-        partial void OnSelectedSprintChanged(string value)
+        partial void OnSelectedSprintChanged(Sprint value)
         {
-            if (!string.IsNullOrEmpty(value))
-            {
-                LoadIssuesAsync();
-            }
+            LoadIssuesAsync();
+        }
+
+        partial void OnSelectedBoardChanged(string value)
+        {
+            LoadSprintsAsync();
+            LoadIssuesAsync();
         }
     }
 }

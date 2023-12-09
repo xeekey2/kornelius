@@ -1,4 +1,5 @@
-﻿using System;
+﻿using kornelius.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -11,12 +12,16 @@ namespace kornelius
 {
     public partial class App : System.Windows.Application
     {
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
             // Initialize your main window here
-            MainWindow mainWindow = new MainWindow();
+            var mainWindow = new MainWindow();
+            var viewModel = new JiraViewModel();
+            mainWindow.DataContext = viewModel;
+
+            await viewModel.InitializeAsync();
 
             NotifyIcon trayIcon = new NotifyIcon();
             trayIcon.Icon = Icons.MyIcon_ico;

@@ -10,6 +10,11 @@
 
   <ItemGroup>
     <None Remove="Resources\Fonts\fontawesome.otf" />
+    <None Remove="Resources\Images\cog.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Images\cog.png" />
   </ItemGroup>
 
   <ItemGroup>

@@ -18,19 +18,19 @@ namespace kornelius.Models
     {
         public Issuetype issuetype { get; set; }
         public object[] components { get; set; }
-        public int timespent { get; set; }
-        public int timeoriginalestimate { get; set; }
+        public int? timespent { get; set; }
+        public int? timeoriginalestimate { get; set; }
         public string description { get; set; }
         public Project project { get; set; }
-        public int aggregatetimespent { get; set; }
+        public int? aggregatetimespent { get; set; }
         public Resolution resolution { get; set; }
         public string customfield_10005 { get; set; }
         public object customfield_10401 { get; set; }
         public object customfield_10402 { get; set; }
         public string customfield_10009 { get; set; }
-        public int aggregatetimeestimate { get; set; }
+        public int? aggregatetimeestimate { get; set; }
         public DateTime? resolutiondate { get; set; }
-        public int workratio { get; set; }
+        public int? workratio { get; set; }
         public string summary { get; set; }
         public object lastViewed { get; set; }
         public Watches watches { get; set; }
@@ -48,8 +48,8 @@ namespace kornelius.Models
         public string[] customfield_10004 { get; set; }
         public object customfield_10400 { get; set; }
         public object environment { get; set; }
-        public int timeestimate { get; set; }
-        public int aggregatetimeoriginalestimate { get; set; }
+        public int? timeestimate { get; set; }
+        public int? aggregatetimeoriginalestimate { get; set; }
         public string duedate { get; set; }
         public Progress progress { get; set; }
         public object[] issuelinks { get; set; }
@@ -63,7 +63,7 @@ namespace kornelius.Models
         }
     }
 
-    public class JiraObject
+    public class IssueResponse
     {
         public string expand { get; set; }
         public int startAt { get; set; }
