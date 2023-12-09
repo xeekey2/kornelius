@@ -22,17 +22,24 @@ namespace kornelius.ViewModels
         [ObservableProperty]
         private Sprint selectedSprint;
         [ObservableProperty]
-        private string selectedBoard;
+        private Board selectedBoard;
         [ObservableProperty]
         private string startStopButtonText = "START";
         [ObservableProperty]
         private bool isStarted;
+        [ObservableProperty]
+        private bool isBoardsCollectionNotEmpty;
+        [ObservableProperty]
+        private bool isSprintsCollectionNotEmpty;
+        [ObservableProperty]
+        public bool isIssuesCollectionNotEmpty;
 
         public JiraViewModel()
         {
             Boards = new ObservableCollection<Board>();
             Sprints = new ObservableCollection<Sprint>();
             Issues = new ObservableCollection<Issue>();
+
         }
 
         public async Task InitializeAsync()
@@ -42,18 +49,26 @@ namespace kornelius.ViewModels
             await LoadIssuesAsync();
         }
 
+
         [RelayCommand]
         public async Task LoadIssuesAsync()
         {
             if (SelectedSprint == null)
             {
-                var issues = await IssueService.GetIssuesForBoardAndAssignee(SelectedBoard, "KASPER");
+                var issues = await IssueService.GetIssuesForBoardAndAssignee(SelectedBoard.id, "KASPER");
                 Issues.Clear();
+                if(!issues.Any())
+                {
+                    SelectedIssue = null;
+                    return;
+                }
+
                 foreach (var issue in issues)
                 {
                     Issues.Add(issue);
                 }
                 SelectedIssue = Issues.FirstOrDefault();
+
             }
             else
             {
@@ -70,15 +85,15 @@ namespace kornelius.ViewModels
         [RelayCommand]
         public async Task LoadSprintsAsync()
         {
-            var sprint = await IssueService.GetSprintsByBoardName(SelectedBoard);
+            var sprint = await IssueService.GetSprintsByBoardName(SelectedBoard.name);
+            Sprints.Clear();
+
             if (sprint == null)
             {
-                Sprints.Clear();
                 SelectedSprint = null;
                 return;
             }
 
-            Sprints.Clear();
             Sprints.Add(sprint);
             SelectedSprint = Sprints.FirstOrDefault();
         }
@@ -95,11 +110,11 @@ namespace kornelius.ViewModels
 
             if (SelectedBoard != null)
             {
-                SelectedBoard = Boards.FirstOrDefault().name;
+                SelectedBoard = Boards.FirstOrDefault();
             }
             else
             {
-                SelectedBoard = Boards.FirstOrDefault(x => x.name.ToString() == "Scrum").name;
+                SelectedBoard = Boards.FirstOrDefault(x => x.name.ToString() == "Scrum");
             }
         }
 
@@ -139,6 +154,13 @@ namespace kornelius.ViewModels
         private bool CanStart() => !IsStarted;
         private bool CanStopOrCancel() => IsStarted;
 
+        public void SetDropdownVisibility()
+        {
+            IsBoardsCollectionNotEmpty = Boards != null && Boards.Any();
+            IsSprintsCollectionNotEmpty = Sprints != null && Sprints.Any();
+            IsIssuesCollectionNotEmpty = Issues != null && Issues.Any();
+        }
+
         partial void OnIsStartedChanged(bool isStarted)
         {
             CancelCommand.NotifyCanExecuteChanged();
@@ -147,12 +169,14 @@ namespace kornelius.ViewModels
         partial void OnSelectedSprintChanged(Sprint value)
         {
             LoadIssuesAsync();
+            SetDropdownVisibility();
         }
 
-        partial void OnSelectedBoardChanged(string value)
+        partial void OnSelectedBoardChanged(Board value)
         {
             LoadSprintsAsync();
             LoadIssuesAsync();
+            SetDropdownVisibility();
         }
     }
 }

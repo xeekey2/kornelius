@@ -35,13 +35,9 @@ namespace kornelius.Services
             }
         }
 
-        public static async Task<IEnumerable<Issue>> GetIssuesForBoardAndAssignee(string boardName, string assignee)
+        public static async Task<IEnumerable<Issue>> GetIssuesForBoardAndAssignee(int boardId, string assignee)
         {
-            int? boardId = await GetBoardByName(boardName);
-            if (!boardId.HasValue)
-                return Enumerable.Empty<Issue>();
-
-            var response = await JiraHttpClient.GetBoardIssues(boardId.Value, assignee);
+            var response = await JiraHttpClient.GetBoardIssues(boardId, assignee);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();

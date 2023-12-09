@@ -63,6 +63,7 @@
                     <ComboBox Style="{StaticResource TransparentComboBox}" 
                               ItemsSource="{Binding Boards}"
                               SelectedItem="{Binding SelectedBoard, Mode=TwoWay}"
+                              DisplayMemberPath="name"
                               x:Name="BoardComboBox" 
                               Grid.Row="1" 
                               Margin="0,5,374,5"/>
