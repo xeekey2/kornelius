@@ -5,6 +5,7 @@
     <FontFamily x:Key="FontAwesome">./Resources/Fonts/FontAwesome</FontFamily>
 
     <Converters:BooleanNotConverter x:Key="BooleanNotConverter"/>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
     <Style x:Key="CustomButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="#E7E7E7"/>

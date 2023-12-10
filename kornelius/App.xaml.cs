@@ -1,4 +1,8 @@
-﻿using kornelius.ViewModels;
+﻿using kornelius.Models;
+using kornelius.Services;
+using kornelius.View;
+using kornelius.ViewModel;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -12,16 +16,30 @@ namespace kornelius
 {
     public partial class App : System.Windows.Application
     {
+        private readonly ServiceProvider _serviceProvider;
+
+        public App()
+        {
+            IServiceCollection services = new ServiceCollection();
+            services.AddSingleton<MainWindow>(provider => new MainWindow
+            {
+                DataContext = provider.GetRequiredService<MainVM>()
+            });
+
+            services.AddSingleton<MainVM>();
+            services.AddSingleton<SettingsVM>();
+            services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<Func<Type, VM>>(serviceProvider => viewModelType => (VM)serviceProvider.GetRequiredService(viewModelType));
+
+            _serviceProvider = services.BuildServiceProvider();
+        }
+
+
         protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
-            // Initialize your main window here
-            var mainWindow = new MainWindow();
-            var viewModel = new JiraViewModel();
-            mainWindow.DataContext = viewModel;
-
-            await viewModel.InitializeAsync();
+            var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+            mainWindow.Show();
 
             NotifyIcon trayIcon = new NotifyIcon();
             trayIcon.Icon = Icons.MyIcon_ico;

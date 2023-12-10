@@ -7,9 +7,9 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
-namespace kornelius.ViewModels
+namespace kornelius.ViewModel
 {
-    public partial class JiraViewModel : ObservableObject
+    public partial class MainVM : VM
     {
         [ObservableProperty]
         private ObservableCollection<Issue> issues;
@@ -33,13 +33,31 @@ namespace kornelius.ViewModels
         private bool isSprintsCollectionNotEmpty;
         [ObservableProperty]
         public bool isIssuesCollectionNotEmpty;
+        [ObservableProperty]
+        private bool showSettings;
+        [ObservableProperty]
+        private bool isSettingsVisible;
+        [ObservableProperty]
+        private object currentView;
+        private INavigationService _navigation;
 
-        public JiraViewModel()
+        public INavigationService Navigation
+        {
+            get => _navigation;
+            set
+            {
+                _navigation = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public MainVM(INavigationService navService)
         {
             Boards = new ObservableCollection<Board>();
             Sprints = new ObservableCollection<Sprint>();
             Issues = new ObservableCollection<Issue>();
-
+            CurrentView = new View.MainUC();
+            Navigation = navService;
         }
 
         public async Task InitializeAsync()
@@ -47,6 +65,21 @@ namespace kornelius.ViewModels
             await LoadBoardsAsync();
             await LoadSprintsAsync();
             await LoadIssuesAsync();
+        }
+
+        [RelayCommand]
+        private void ToggleSettings()
+        {
+            IsSettingsVisible = !IsSettingsVisible;
+            if (IsSettingsVisible)
+            {
+                Navigation.NavigateTo<MainVM>();
+
+            }
+            else
+            {
+                Navigation.NavigateTo<SettingsVM>();
+            }
         }
 
 
@@ -131,6 +164,7 @@ namespace kornelius.ViewModels
             }
         }
 
+
         private void Start()
         {
             IsStarted = true;
@@ -154,13 +188,6 @@ namespace kornelius.ViewModels
         private bool CanStart() => !IsStarted;
         private bool CanStopOrCancel() => IsStarted;
 
-        public void SetDropdownVisibility()
-        {
-            IsBoardsCollectionNotEmpty = Boards != null && Boards.Any();
-            IsSprintsCollectionNotEmpty = Sprints != null && Sprints.Any();
-            IsIssuesCollectionNotEmpty = Issues != null && Issues.Any();
-        }
-
         partial void OnIsStartedChanged(bool isStarted)
         {
             CancelCommand.NotifyCanExecuteChanged();
@@ -169,14 +196,12 @@ namespace kornelius.ViewModels
         partial void OnSelectedSprintChanged(Sprint value)
         {
             LoadIssuesAsync();
-            SetDropdownVisibility();
         }
 
         partial void OnSelectedBoardChanged(Board value)
         {
             LoadSprintsAsync();
             LoadIssuesAsync();
-            SetDropdownVisibility();
         }
     }
 }

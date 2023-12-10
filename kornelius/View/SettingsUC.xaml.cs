@@ -1,4 +1,4 @@
-﻿using kornelius.ViewModels;
+﻿using kornelius.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,24 +14,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace kornelius
+namespace kornelius.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for SettingsUC.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class SettingsUC : UserControl
     {
-
-        public MainWindow()
+        public SettingsUC()
         {
             InitializeComponent();
-            Visibility = Visibility.Hidden;
-            this.Loaded += MainWindow_Loaded;
-        }
-
-        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
