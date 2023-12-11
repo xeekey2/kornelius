@@ -3,11 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:kornelius.View"
+        xmlns:view="clr-namespace:kornelius.View"
+        xmlns:VM="clr-namespace:kornelius.ViewModel" d:DataContext="{d:DesignInstance Type=VM:MainWindowVM}"
         mc:Ignorable="d"
         Title="MainWindow" Height="362" Width="548"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent">
-    
+
+
     <Grid>
         <Border CornerRadius="10" Background="White" BorderBrush="Gray" BorderThickness="1">
             <Grid>
@@ -36,7 +38,14 @@
                             HorizontalAlignment="Right"
                             Margin="5"
                             Command="{Binding ToggleSettingsCommand}">
-                            <Image Source="../Resources/Images/cog.png"/>
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <ContentPresenter x:Name="MyContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                </ControlTemplate>
+                            </Button.Template>
+                            <Button.Content>
+                                <Image Source="../../Resources/Images/cog.png"/>
+                            </Button.Content>
                         </Button>
 
                         <Line X1="0" Y1="32" X2="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Border}}" Y2="32" Stroke="#A6A6A6" StrokeThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>

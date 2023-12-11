@@ -23,9 +23,10 @@ namespace kornelius
             IServiceCollection services = new ServiceCollection();
             services.AddSingleton<MainWindow>(provider => new MainWindow
             {
-                DataContext = provider.GetRequiredService<MainVM>()
+                DataContext = provider.GetRequiredService<MainWindowVM>()
             });
 
+            services.AddSingleton<MainWindowVM>();
             services.AddSingleton<MainVM>();
             services.AddSingleton<SettingsVM>();
             services.AddSingleton<INavigationService, NavigationService>();

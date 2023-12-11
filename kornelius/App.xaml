@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:kornelius"
              xmlns:vm="clr-namespace:kornelius.ViewModel"
              xmlns:view="clr-namespace:kornelius.View"
-             StartupUri="View/MainWindow.xaml">
+             StartupUri="MVVM/View/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

@@ -34,10 +34,6 @@ namespace kornelius.ViewModel
         [ObservableProperty]
         public bool isIssuesCollectionNotEmpty;
         [ObservableProperty]
-        private bool showSettings;
-        [ObservableProperty]
-        private bool isSettingsVisible;
-        [ObservableProperty]
         private object currentView;
         private INavigationService _navigation;
 
@@ -58,6 +54,7 @@ namespace kornelius.ViewModel
             Issues = new ObservableCollection<Issue>();
             CurrentView = new View.MainUC();
             Navigation = navService;
+            InitializeAsync();
         }
 
         public async Task InitializeAsync()
@@ -66,22 +63,6 @@ namespace kornelius.ViewModel
             await LoadSprintsAsync();
             await LoadIssuesAsync();
         }
-
-        [RelayCommand]
-        private void ToggleSettings()
-        {
-            IsSettingsVisible = !IsSettingsVisible;
-            if (IsSettingsVisible)
-            {
-                Navigation.NavigateTo<MainVM>();
-
-            }
-            else
-            {
-                Navigation.NavigateTo<SettingsVM>();
-            }
-        }
-
 
         [RelayCommand]
         public async Task LoadIssuesAsync()

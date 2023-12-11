@@ -10,11 +10,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-public class JiraHttpClient
+public class JiraApiWrapper
 {
     private readonly HttpClient httpClient;
 
-    public JiraHttpClient(string baseAddress, string username, string apiToken)
+    public JiraApiWrapper(string baseAddress, string username, string apiToken)
     {
         httpClient = new HttpClient
         {

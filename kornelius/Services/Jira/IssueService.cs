@@ -16,12 +16,12 @@ namespace kornelius.Services
         private static readonly string userName = "kasper";
         private static readonly string baseAddress = "http://itopgaver:8080/";
 
-        private static readonly JiraHttpClient JiraHttpClient = new JiraHttpClient(baseAddress, userName, apiKey);
+        private static readonly JiraApiWrapper JiraApiWrapper = new JiraApiWrapper(baseAddress, userName, apiKey);
 
         public static async Task<IEnumerable<Issue>> GetIssuesForSprintByAssignee(int sprintId, string assignee)
         {
             var jql = $"Sprint = {sprintId} AND assignee = {assignee}";
-            var response = await JiraHttpClient.GetIssues(jql);
+            var response = await JiraApiWrapper.GetIssues(jql);
 
             if (response.IsSuccessStatusCode)
             {
@@ -37,7 +37,7 @@ namespace kornelius.Services
 
         public static async Task<IEnumerable<Issue>> GetIssuesForBoardAndAssignee(int boardId, string assignee)
         {
-            var response = await JiraHttpClient.GetBoardIssues(boardId, assignee);
+            var response = await JiraApiWrapper.GetBoardIssues(boardId, assignee);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
@@ -56,7 +56,7 @@ namespace kornelius.Services
             if (!boardId.HasValue)
                 return null;
 
-            var response = await JiraHttpClient.GetSprints(boardId.Value);
+            var response = await JiraApiWrapper.GetSprints(boardId.Value);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
@@ -75,7 +75,7 @@ namespace kornelius.Services
 
         public static async Task<int?> GetBoardByName(string boardName)
         {
-            var response = await JiraHttpClient.GetBoardId(boardName);
+            var response = await JiraApiWrapper.GetBoardId(boardName);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
@@ -91,7 +91,7 @@ namespace kornelius.Services
 
         public static async Task<List<Board>> GetBoards()
         {
-            var response = await JiraHttpClient.GetBoards();
+            var response = await JiraApiWrapper.GetBoards();
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
