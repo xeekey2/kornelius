@@ -9,7 +9,6 @@
         Title="MainWindow" Height="362" Width="548"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent">
 
-
     <Grid>
         <Border CornerRadius="10" Background="White" BorderBrush="Gray" BorderThickness="1">
             <Grid>
@@ -52,9 +51,7 @@
                     </Grid>
                 </Border>
 
-                <ContentControl Grid.Row="1" Content="{Binding Navigation.CurrentView}">
-                    
-                </ContentControl>
+                <ContentControl Grid.Row="1" Content="{Binding Navigation.CurrentView}"/>
 
                 <Border Background="#E6E6E6" Grid.Row="2" CornerRadius="0,0,10,10" Height="32">
                     <Grid>
