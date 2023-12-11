@@ -13,12 +13,12 @@
         <Border CornerRadius="10" Background="White" BorderBrush="Gray" BorderThickness="1">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
                     <!-- Header -->
-                    <RowDefinition Height="*"/>
-                    <!-- Content -->
                     <RowDefinition Height="Auto"/>
+                    <!-- Content -->
+                    <RowDefinition Height="*"/>
                     <!-- Footer -->
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <!-- Header -->
@@ -29,7 +29,6 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Settings Button -->
                         <Button x:Name="SettingsButton"
                             Width="28"
                             Height="20"
@@ -46,13 +45,14 @@
                                 <Image Source="../../Resources/Images/cog.png"/>
                             </Button.Content>
                         </Button>
-
                         <Line X1="0" Y1="32" X2="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Border}}" Y2="32" Stroke="#A6A6A6" StrokeThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
                     </Grid>
                 </Border>
-
+                
+                <!-- Content -->
                 <ContentControl Grid.Row="1" Content="{Binding Navigation.CurrentView}"/>
 
+                <!-- Footer -->
                 <Border Background="#E6E6E6" Grid.Row="2" CornerRadius="0,0,10,10" Height="32">
                     <Grid>
                         <Grid.ColumnDefinitions>

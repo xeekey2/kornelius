@@ -65,41 +65,9 @@ namespace kornelius.ViewModel
         }
 
         [RelayCommand]
-        public async Task LoadIssuesAsync()
-        {
-            if (SelectedSprint == null)
-            {
-                var issues = await IssueService.GetIssuesForBoardAndAssignee(SelectedBoard.id, "KASPER");
-                Issues.Clear();
-                if(!issues.Any())
-                {
-                    SelectedIssue = null;
-                    return;
-                }
-
-                foreach (var issue in issues)
-                {
-                    Issues.Add(issue);
-                }
-                SelectedIssue = Issues.FirstOrDefault();
-
-            }
-            else
-            {
-                var issues = await IssueService.GetIssuesForSprintByAssignee(SelectedSprint.id, "KASPER");
-                Issues.Clear();
-                foreach (var issue in issues)
-                {
-                    Issues.Add(issue);
-                }
-                SelectedIssue = Issues.FirstOrDefault();
-            }
-        }
-
-        [RelayCommand]
         public async Task LoadSprintsAsync()
         {
-            var sprint = await IssueService.GetSprintsByBoardName(SelectedBoard.name);
+            var sprint = await IssueService.GetSprintsByBoardId(SelectedBoard.id);
             Sprints.Clear();
 
             if (sprint == null)
@@ -133,15 +101,37 @@ namespace kornelius.ViewModel
         }
 
         [RelayCommand]
+        public async Task LoadIssuesAsync()
+        {
+            if (SelectedSprint == null || Sprints.Count() == 0)
+            {
+                var issues = await IssueService.GetIssuesForBoardAndAssignee(SelectedBoard.id, "KASPER");
+                Issues.Clear();
+                if (!issues.Any())
+                {
+                    SelectedIssue = null;
+                    return;
+                }
+
+                foreach (var issue in issues)
+                {
+                    Issues.Add(issue);
+                }
+                SelectedIssue = Issues.FirstOrDefault();
+
+            }
+        }
+
+        [RelayCommand]
         private void ToggleStartStop()
         {
             if (IsStarted)
             {
-                Stop(); // This method sets IsStarted to false and performs stop logic
+                Stop(); 
             }
             else
             {
-                Start(); // This method sets IsStarted to true and performs start logic
+                Start(); 
             }
         }
 

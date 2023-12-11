@@ -50,21 +50,14 @@ namespace kornelius.Services
             }
         }
 
-        public static async Task<Sprint> GetSprintsByBoardName(string boardName)
+        public static async Task<Sprint> GetSprintsByBoardId(int boardId)
         {
-            int? boardId = await GetBoardByName(boardName);
-            if (!boardId.HasValue)
-                return null;
-
-            var response = await JiraApiWrapper.GetSprints(boardId.Value);
+            var response = await JiraApiWrapper.GetSprints(boardId);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
                 var sprints = JsonConvert.DeserializeObject<SprintResponse>(json);
-                var newestSprint = sprints.values
-                    .OrderByDescending(s => s.endDate)
-                    .FirstOrDefault();
-
+                var newestSprint = sprints.values.OrderByDescending(s => s.endDate).FirstOrDefault();
                 return newestSprint;
             }
             else

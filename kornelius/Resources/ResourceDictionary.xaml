@@ -36,10 +36,10 @@
             <DataTrigger Binding="{Binding Content, RelativeSource={RelativeSource Self}}" Value="START">
                 <Setter Property="Background" Value="Green"/>
             </DataTrigger>
+            
             <DataTrigger Binding="{Binding Content, RelativeSource={RelativeSource Self}}" Value="PAUSE">
                 <Setter Property="Background" Value="RED"/>
             </DataTrigger>
-
         </Style.Triggers>
     </Style>
 
@@ -135,6 +135,7 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="HasItems" Value="false">
                             <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95"/>
+                            <Setter Property="Visibility" Value="Collapsed"/>
                         </Trigger>
                         <Trigger Property="IsGrouping" Value="true">
                             <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
