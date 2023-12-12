@@ -59,7 +59,7 @@ namespace kornelius.ViewModel
             };
 
             var json = JsonConvert.SerializeObject(settings, Formatting.Indented);
-            File.WriteAllText("settings.json", json);
+            File.WriteAllText("C:\\Users\\khj.LASERTRYK\\source\\repos\\kornelius\\settings.json", json);
         }
     }
 

@@ -1,0 +1,8 @@
+{
+  "JiraUsername": "kasper",
+  "JiraBaseUrl": "http://itopgaver:8080",
+  "EnableAutomaticLogging": true,
+  "ShowEstimatedTime": false,
+  "ShowLoggedTime": false,
+  "ShowRemainingTime": false
+}
