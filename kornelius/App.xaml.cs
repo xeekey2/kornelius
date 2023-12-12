@@ -1,4 +1,5 @@
-﻿using kornelius.Models;
+﻿using kornelius.Model;
+using kornelius.MVVM.Model;
 using kornelius.Services;
 using kornelius.View;
 using kornelius.ViewModel;

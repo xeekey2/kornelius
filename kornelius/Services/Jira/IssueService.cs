@@ -1,4 +1,4 @@
-﻿using kornelius.Models;
+﻿using kornelius.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,8 @@ namespace kornelius.Services
         private static readonly string apiKey = "kasper110899";
         private static readonly string userName = "kasper";
         private static readonly string baseAddress = "http://itopgaver:8080/";
+        private static readonly string assignee = "kasper";
+
 
         private static readonly JiraApiWrapper JiraApiWrapper = new JiraApiWrapper(baseAddress, userName, apiKey);
 
@@ -48,50 +50,6 @@ namespace kornelius.Services
             {
                 return Enumerable.Empty<Issue>();
             }
-        }
-
-        public static async Task<Sprint> GetSprintsByBoardId(int boardId)
-        {
-            var response = await JiraApiWrapper.GetSprints(boardId);
-            if (response.IsSuccessStatusCode)
-            {
-                var json = await response.Content.ReadAsStringAsync();
-                var sprints = JsonConvert.DeserializeObject<SprintResponse>(json);
-                var newestSprint = sprints.values.OrderByDescending(s => s.endDate).FirstOrDefault();
-                return newestSprint;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public static async Task<int?> GetBoardByName(string boardName)
-        {
-            var response = await JiraApiWrapper.GetBoardId(boardName);
-            if (response.IsSuccessStatusCode)
-            {
-                var json = await response.Content.ReadAsStringAsync();
-                var boardsResponse = JsonConvert.DeserializeObject<BoardResponse>(json);
-                var board = boardsResponse.values.FirstOrDefault(b => b.name.Equals(boardName, StringComparison.OrdinalIgnoreCase));
-                if (board != null)
-                {
-                    return board.id;
-                }
-            }
-            return null;
-        }
-
-        public static async Task<List<Board>> GetBoards()
-        {
-            var response = await JiraApiWrapper.GetBoards();
-            if (response.IsSuccessStatusCode)
-            {
-                var json = await response.Content.ReadAsStringAsync();
-                var boardsResponse = JsonConvert.DeserializeObject<BoardResponse>(json);
-                return boardsResponse.values.ToList();
-            }
-            return null;
         }
     }
 }

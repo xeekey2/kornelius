@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using kornelius.Models;
+using kornelius.MVVM.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

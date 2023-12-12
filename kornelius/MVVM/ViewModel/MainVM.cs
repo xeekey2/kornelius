@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using kornelius.Models;
+using kornelius.Model;
+using kornelius.MVVM.Model;
 using kornelius.Services;
+using kornelius.Services.Jira;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -63,11 +65,12 @@ namespace kornelius.ViewModel
             await LoadSprintsAsync();
             await LoadIssuesAsync();
         }
+        #region Commands
 
         [RelayCommand]
         public async Task LoadSprintsAsync()
         {
-            var sprint = await IssueService.GetSprintsByBoardId(SelectedBoard.id);
+            var sprint = await SprintService.GetSprintsByBoardId(SelectedBoard.id);
             Sprints.Clear();
 
             if (sprint == null)
@@ -83,7 +86,7 @@ namespace kornelius.ViewModel
         [RelayCommand]
         public async Task LoadBoardsAsync()
         {
-            var boards = await IssueService.GetBoards();
+            var boards = await BoardService.GetBoardsWithAssigneeIssues("Kasper");
             Boards.Clear();
             foreach (var board in boards)
             {
@@ -105,7 +108,7 @@ namespace kornelius.ViewModel
         {
             if (SelectedSprint == null || Sprints.Count() == 0)
             {
-                var issues = await IssueService.GetIssuesForBoardAndAssignee(SelectedBoard.id, "KASPER");
+                var issues = await IssueService.GetIssuesForBoardAndAssignee(SelectedBoard.id, "Kasper");
                 Issues.Clear();
                 if (!issues.Any())
                 {
@@ -135,7 +138,9 @@ namespace kornelius.ViewModel
             }
         }
 
+        #endregion
 
+        #region UIHelpers
         private void Start()
         {
             IsStarted = true;
@@ -174,5 +179,6 @@ namespace kornelius.ViewModel
             LoadSprintsAsync();
             LoadIssuesAsync();
         }
+        #endregion
     }
 }

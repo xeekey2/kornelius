@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace kornelius.Models
+namespace kornelius.MVVM.Model
 {
     public abstract class VM : ObservableObject
     {

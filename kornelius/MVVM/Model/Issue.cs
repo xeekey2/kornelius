@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace kornelius.Models
+namespace kornelius.Model
 {
     public class Issue
     {

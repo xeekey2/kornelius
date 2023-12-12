@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using kornelius.Models;
+using kornelius.MVVM.Model;
 using kornelius.Services;
 using System;
 using System.Collections.Generic;

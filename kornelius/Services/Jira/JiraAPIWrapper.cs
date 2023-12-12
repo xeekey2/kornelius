@@ -1,4 +1,4 @@
-﻿using kornelius.Models;
+﻿using kornelius.Model;
 using LaserTryk.Util;
 using Newtonsoft.Json;
 using System;
