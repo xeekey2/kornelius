@@ -12,10 +12,9 @@ namespace kornelius.ViewModel
 {
     public partial class MainWindowVM : VM
     {
-        [ObservableProperty]
-        private bool showSettings;
-        [ObservableProperty]
-        private bool isSettingsVisible;
+        [ObservableProperty] private bool showSettings;
+        [ObservableProperty] private bool isSettingsVisible;
+
         private INavigationService _navigation;
 
         public INavigationService Navigation

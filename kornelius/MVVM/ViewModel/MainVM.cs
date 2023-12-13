@@ -13,32 +13,20 @@ namespace kornelius.ViewModel
 {
     public partial class MainVM : VM
     {
-        [ObservableProperty]
-        private ObservableCollection<Issue> issues;
-        [ObservableProperty]
-        private Issue selectedIssue;
-        [ObservableProperty]
-        private ObservableCollection<Sprint> sprints;
-        [ObservableProperty]
-        private ObservableCollection<Board> boards;
-        [ObservableProperty]
-        private Sprint selectedSprint;
-        [ObservableProperty]
-        private Board selectedBoard;
-        [ObservableProperty]
-        private string startStopButtonText = "START";
-        [ObservableProperty]
-        private bool isStarted;
-        [ObservableProperty]
-        private bool isBoardsCollectionNotEmpty;
-        [ObservableProperty]
-        private bool isSprintsCollectionNotEmpty;
-        [ObservableProperty]
-        public bool isIssuesCollectionNotEmpty;
-        [ObservableProperty]
-        private object currentView;
-        private INavigationService _navigation;
+        [ObservableProperty] private ObservableCollection<Issue> issues;
+        [ObservableProperty] private Issue selectedIssue;
+        [ObservableProperty] private ObservableCollection<Sprint> sprints;
+        [ObservableProperty] private ObservableCollection<Board> boards;
+        [ObservableProperty] private Sprint selectedSprint;
+        [ObservableProperty] private Board selectedBoard;
+        [ObservableProperty] private string startStopButtonText = "START";
+        [ObservableProperty] private bool isStarted;
+        [ObservableProperty] private bool isBoardsCollectionNotEmpty;
+        [ObservableProperty] private bool isSprintsCollectionNotEmpty;
+        [ObservableProperty] public bool isIssuesCollectionNotEmpty;
+        [ObservableProperty] private object currentView;
 
+        private INavigationService _navigation;
         public INavigationService Navigation
         {
             get => _navigation;
@@ -51,13 +39,19 @@ namespace kornelius.ViewModel
 
         public MainVM(INavigationService navService)
         {
+            CurrentView = new View.MainUC();
+            Navigation = navService;
+            InitializeCollections();
+            InitializeAsync();
+        }
+
+        private void InitializeCollections()
+        {
             Boards = new ObservableCollection<Board>();
             Sprints = new ObservableCollection<Sprint>();
             Issues = new ObservableCollection<Issue>();
-            CurrentView = new View.MainUC();
-            Navigation = navService;
-            InitializeAsync();
         }
+
 
         public async Task InitializeAsync()
         {

@@ -24,7 +24,7 @@
         <Style x:Key="PlaceholderUsername" TargetType="Label">
             <Setter Property="Visibility" Value="Collapsed"/>
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Text, ElementName=JiraUsernameTextBox}" Value="">
+                <DataTrigger Binding="{Binding Text, ElementName=JiraUsername}" Value="">
                     <Setter Property="Visibility" Value="Visible"/>
                 </DataTrigger>
             </Style.Triggers>
@@ -51,7 +51,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBox x:Name="JiraUsernameTextBox" Grid.Row="0" Style="{StaticResource RoundedTextBox}" Text="{Binding JiraUsername}" />
+            <TextBox x:Name="JiraUsername" Grid.Row="0" Style="{StaticResource RoundedTextBox}" Text="{Binding JiraUsername}" />
             <Label Grid.Row="0" Margin="7,5,0,0" Padding="5,0,0,0" Foreground="Gray" Content="Jira Username" IsHitTestVisible="False" Style="{StaticResource PlaceholderUsername}"/>
 
             <TextBox x:Name="JiraBaseUrl" Grid.Row="1" Style="{StaticResource RoundedTextBox}" Text="{Binding JiraBaseUrl}" />
