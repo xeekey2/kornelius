@@ -115,7 +115,6 @@ namespace kornelius.ViewModel
                     Issues.Add(issue);
                 }
                 SelectedIssue = Issues.FirstOrDefault();
-
             }
         }
 

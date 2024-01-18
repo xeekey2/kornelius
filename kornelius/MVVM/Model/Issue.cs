@@ -23,6 +23,21 @@ namespace kornelius.Model
         public string description { get; set; }
         public Project project { get; set; }
         public int? aggregatetimespent { get; set; }
+        public double? AggregateTimeSpentHours
+        {
+            get
+            {
+                if (aggregatetimespent.HasValue)
+                {
+                    // Convert seconds to hours
+                    return aggregatetimespent.Value / 3600.0;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
         public Resolution resolution { get; set; }
         public string customfield_10005 { get; set; }
         public object customfield_10401 { get; set; }

@@ -45,13 +45,17 @@
                 <Grid Grid.Row="4" Margin="0,24,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="32"/>
+                        <RowDefinition Height="32"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="29*"/>
                         <ColumnDefinition Width="29*"/>
                         <ColumnDefinition Width="29*"/>
                     </Grid.ColumnDefinitions>
                     <Button Style="{StaticResource CustomButtonStyle}" Command="{Binding ToggleStartStopCommand}" Content="{Binding StartStopButtonText}" Grid.Column="0" Margin="5,0,5,0" Padding="10"/>
                     <Button Style="{StaticResource CustomCancelButtonStyle}" Command="{Binding CancelCommand}" Content="CLEAR" Grid.Column="3" Margin="5,0,5,0" Foreground="White" Padding="10"/>
+                    <Label Content="{Binding SelectedIssue.fields.AggregateTimeSpentHours}" Grid.Row="1"/>
                 </Grid>
             </Grid>
         </Grid>
