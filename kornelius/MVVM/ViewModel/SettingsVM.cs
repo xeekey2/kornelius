@@ -13,6 +13,7 @@ namespace kornelius.ViewModel
     using CommunityToolkit.Mvvm.Input;
     using System.IO;
     using Newtonsoft.Json;
+    using kornelius.Services.Setting;
 
     public partial class SettingsVM : VM
     {
@@ -30,6 +31,7 @@ namespace kornelius.ViewModel
             if (!IsSettingsLoaded)
             {
                 LoadSettings();
+
             }
         }
 
@@ -40,48 +42,36 @@ namespace kornelius.ViewModel
         partial void OnShowLoggedTimeChanged(bool value) => SaveSettings();
         partial void OnShowRemainingTimeChanged(bool value) => SaveSettings();
 
+
         private void LoadSettings()
         {
-            var settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "kornelius", "settings.json");
-
-            if (File.Exists(settingsPath))
+            var settings = SettingService.LoadSettings();
+            if (settings != null)
             {
-                var json = File.ReadAllText(settingsPath);
-                var settings = JsonConvert.DeserializeObject<Settings>(json);
-
-                if (settings != null)
-                {
-                    JiraUsername = settings.JiraUsername;
-                    JiraBaseUrl = settings.JiraBaseUrl;
-                    EnableAutomaticLogging = settings.EnableAutomaticLogging;
-                    ShowEstimatedTime = settings.ShowEstimatedTime;
-                    ShowLoggedTime = settings.ShowLoggedTime;
-                    ShowRemainingTime = settings.ShowRemainingTime;
-
-                    IsSettingsLoaded = true;
-                }
+                JiraUsername = settings.JiraUsername;
+                JiraBaseUrl = settings.JiraBaseUrl;
+                EnableAutomaticLogging = settings.EnableAutomaticLogging;
+                ShowEstimatedTime = settings.ShowEstimatedTime;
+                ShowLoggedTime = settings.ShowLoggedTime;
+                ShowRemainingTime = settings.ShowRemainingTime;
+                IsSettingsLoaded = true;
             }
         }
 
         private void SaveSettings()
         {
-            EnsureDirectoryExists();
-
-            var settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "kornelius", "settings.json");
-
-                var settings = new
-                {
-                    JiraUsername,
-                    JiraBaseUrl,
-                    EnableAutomaticLogging,
-                    ShowEstimatedTime,
-                    ShowLoggedTime,
-                    ShowRemainingTime
-                };
-
-                var json = JsonConvert.SerializeObject(settings, Formatting.Indented);
-                File.WriteAllText(settingsPath, json);
+            var settings = new Settings
+            {
+                JiraUsername = JiraUsername,
+                JiraBaseUrl = JiraBaseUrl,
+                EnableAutomaticLogging = EnableAutomaticLogging,
+                ShowEstimatedTime = ShowEstimatedTime,
+                ShowLoggedTime = ShowLoggedTime,
+                ShowRemainingTime = ShowRemainingTime
+            };
+            SettingService.SaveSettings(settings);
         }
+
 
         private void EnsureDirectoryExists()
         {

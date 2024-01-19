@@ -55,11 +55,18 @@ namespace kornelius.ViewModel
 
         public async Task InitializeAsync()
         {
+            await LoadSettingsAsync();
             await LoadBoardsAsync();
             await LoadSprintsAsync();
             await LoadIssuesAsync();
         }
         #region Commands
+
+        [RelayCommand]
+        public async Task LoadSettingsAsync()
+        {
+            await await SettingsService.GetSettings();
+        }
 
         [RelayCommand]
         public async Task LoadSprintsAsync()
