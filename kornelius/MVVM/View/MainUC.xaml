@@ -4,12 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=VM:MainVM}"
              d:DesignHeight="450" d:DesignWidth="800">
-    
+
     <Grid>
         <Grid Margin="10">
             <Grid Grid.Row="1" Margin="10">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -33,7 +35,6 @@
                                                           Grid.Row="2" 
                                                           Margin="0,5,374,5"/>
 
-
                 <ComboBox Style="{StaticResource TransparentComboBox}" 
                                                           ItemsSource="{Binding Issues}" 
                                                           SelectedItem="{Binding SelectedIssue, Mode=TwoWay}" 
@@ -42,7 +43,12 @@
                                                           Grid.Row="3" 
                                                           Margin="0,5,74,5"/>
 
-                <Grid Grid.Row="4" Margin="0,24,0,0">
+                <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,5,74,5">
+                    <TextBlock Text="Brugte timer: " VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding SelectedIssue.fields.AggregateTimeSpentHours, Converter={StaticResource NullToZeroConverter}}" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Grid Grid.Row="5" Margin="0,24,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="32"/>
                         <RowDefinition Height="32"/>
@@ -53,9 +59,10 @@
                         <ColumnDefinition Width="29*"/>
                         <ColumnDefinition Width="29*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Style="{StaticResource CustomButtonStyle}" Command="{Binding ToggleStartStopCommand}" Content="{Binding StartStopButtonText}" Grid.Column="0" Margin="5,0,5,0" Padding="10"/>
-                    <Button Style="{StaticResource CustomCancelButtonStyle}" Command="{Binding CancelCommand}" Content="CLEAR" Grid.Column="3" Margin="5,0,5,0" Foreground="White" Padding="10"/>
-                    <Label Content="{Binding SelectedIssue.fields.AggregateTimeSpentHours}" Grid.Row="1"/>
+                    <Button Style="{StaticResource StartButtonStyle}" Command="{Binding ToggleStartStopCommand}" Content="{Binding StartStopButtonText}" Grid.Column="0" Margin="5,0,5,0" Padding="10"/>
+                    <Button Style="{StaticResource LogButtonStyle}" Command="{Binding LogCommand}" Content="{Binding LogButtonText}" Grid.Column="1" Margin="5,0,5,0" Padding="10"/>
+                    <Button Style="{StaticResource CustomCancelButtonStyle}" Command="{Binding ClearCommand}" Content="CLEAR" Grid.Column="2" Margin="5,0,5,0" Foreground="White" Padding="10"/>
+                    <TextBlock Text="{Binding ElapsedTime}" Grid.Row="2" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
                 </Grid>
             </Grid>
         </Grid>

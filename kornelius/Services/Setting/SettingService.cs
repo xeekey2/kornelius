@@ -11,18 +11,18 @@ namespace kornelius.Services.Setting
 {
     public static class SettingService
     {
-        public static Settings LoadSettings()
+        public static async Task<Settings> GetSettings()
         {
             var settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "kornelius", "settings.json");
             if (File.Exists(settingsPath))
             {
-                var json = File.ReadAllText(settingsPath);
+                var json = await File.ReadAllTextAsync(settingsPath);
                 return JsonConvert.DeserializeObject<Settings>(json);
             }
             return null;
         }
 
-        public static void SaveSettings(Settings setting)
+        public static async Task SaveSettings(Settings setting)
         {
             EnsureDirectoryExists();
 
@@ -39,10 +39,10 @@ namespace kornelius.Services.Setting
             };
 
             var json = JsonConvert.SerializeObject(settings, Formatting.Indented);
-            File.WriteAllText(settingsPath, json);
+            await File.WriteAllTextAsync(settingsPath, json);
         }
 
-        private static void EnsureDirectoryExists()
+        private static async Task EnsureDirectoryExists()
         {
             var folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "kornelius");
             if (!Directory.Exists(folderPath))

@@ -30,7 +30,7 @@ namespace kornelius.ViewModel
         {
             if (!IsSettingsLoaded)
             {
-                LoadSettings();
+                GetSettings();
 
             }
         }
@@ -43,9 +43,9 @@ namespace kornelius.ViewModel
         partial void OnShowRemainingTimeChanged(bool value) => SaveSettings();
 
 
-        private void LoadSettings()
+        private async void GetSettings()
         {
-            var settings = SettingService.LoadSettings();
+            var settings = await SettingService.GetSettings();
             if (settings != null)
             {
                 JiraUsername = settings.JiraUsername;
@@ -58,7 +58,7 @@ namespace kornelius.ViewModel
             }
         }
 
-        private void SaveSettings()
+        private async void SaveSettings()
         {
             var settings = new Settings
             {
@@ -69,7 +69,7 @@ namespace kornelius.ViewModel
                 ShowLoggedTime = ShowLoggedTime,
                 ShowRemainingTime = ShowRemainingTime
             };
-            SettingService.SaveSettings(settings);
+            await SettingService.SaveSettings(settings);
         }
 
 

@@ -4,10 +4,13 @@ using kornelius.Model;
 using kornelius.MVVM.Model;
 using kornelius.Services;
 using kornelius.Services.Jira;
+using kornelius.Services.Setting;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace kornelius.ViewModel
 {
@@ -20,29 +23,22 @@ namespace kornelius.ViewModel
         [ObservableProperty] private Sprint selectedSprint;
         [ObservableProperty] private Board selectedBoard;
         [ObservableProperty] private string startStopButtonText = "START";
+        [ObservableProperty] private string logButtonText = "Log";
         [ObservableProperty] private bool isStarted;
         [ObservableProperty] private bool isBoardsCollectionNotEmpty;
         [ObservableProperty] private bool isSprintsCollectionNotEmpty;
         [ObservableProperty] public bool isIssuesCollectionNotEmpty;
-        [ObservableProperty] private object currentView;
+        [ObservableProperty] private string elapsedTime = "00:00:00";
+        [ObservableProperty] private string timerDisplayText;
 
-        private INavigationService _navigation;
-        public INavigationService Navigation
-        {
-            get => _navigation;
-            set
-            {
-                _navigation = value;
-                OnPropertyChanged();
-            }
-        }
+        private DispatcherTimer timer;
+        public TimeSpan elapsedTimeSpan;
 
-        public MainVM(INavigationService navService)
+        public MainVM()
         {
-            CurrentView = new View.MainUC();
-            Navigation = navService;
             InitializeCollections();
             InitializeAsync();
+            InitializeTimer();
         }
 
         private void InitializeCollections()
@@ -60,12 +56,39 @@ namespace kornelius.ViewModel
             await LoadSprintsAsync();
             await LoadIssuesAsync();
         }
+
+        public async Task InitializeTimer()
+        {
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1); // Update every second
+            timer.Tick += Timer_Tick;
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            elapsedTimeSpan = elapsedTimeSpan.Add(TimeSpan.FromSeconds(1));
+            ElapsedTime = elapsedTimeSpan.ToString(@"hh\:mm\:ss");
+            UpdateTimerDisplayText();
+        }
+
+        private void UpdateTimerDisplayText()
+        {
+            if (elapsedTimeSpan > TimeSpan.Zero && SelectedIssue != null)
+            {
+                TimerDisplayText = $"Issue: {SelectedIssue.key} - Time: {elapsedTimeSpan:hh\\:mm\\:ss}";
+            }
+            else
+            {
+                TimerDisplayText = "No active time monitoring";
+            }
+        }
+
         #region Commands
 
         [RelayCommand]
         public async Task LoadSettingsAsync()
         {
-            await await SettingsService.GetSettings();
+            // Implement your logic to load settings
         }
 
         [RelayCommand]
@@ -123,6 +146,23 @@ namespace kornelius.ViewModel
                 }
                 SelectedIssue = Issues.FirstOrDefault();
             }
+            else
+            {
+                var issues = await IssueService.GetIssuesForSprintAndAssignee(SelectedSprint.id, "Kasper");
+                Issues.Clear();
+                if (!issues.Any())
+                {
+                    SelectedIssue = null;
+                    return;
+                }
+
+                foreach (var issue in issues)
+                {
+                    Issues.Add(issue);
+                }
+                SelectedIssue = Issues.FirstOrDefault();
+            }
+            UpdateTimerDisplayText(); // Update display text when issues are loaded
         }
 
         [RelayCommand]
@@ -130,11 +170,11 @@ namespace kornelius.ViewModel
         {
             if (IsStarted)
             {
-                Stop(); 
+                Stop();
             }
             else
             {
-                Start(); 
+                Start();
             }
         }
 
@@ -143,30 +183,55 @@ namespace kornelius.ViewModel
         #region UIHelpers
         private void Start()
         {
-            IsStarted = true;
-            StartStopButtonText = "PAUSE";
-
+            if (!IsStarted)
+            {
+                // No reset of elapsedTimeSpan here to ensure it picks up from where it left off
+                timer.Start();
+                IsStarted = true;
+                StartStopButtonText = "PAUSE";
+            }
         }
 
         private void Stop()
         {
             IsStarted = false;
             StartStopButtonText = "START";
+            timer.Stop();
         }
 
-        [RelayCommand(CanExecute = nameof(CanStopOrCancel))]
-        private void Cancel()
+        [RelayCommand(CanExecute = nameof(CanClear))]
+        private void Clear()
         {
+            if (timer.IsEnabled)
+            {
+                timer.Stop();
+            }
+            elapsedTimeSpan = TimeSpan.Zero;
+            ElapsedTime = "00:00:00";
             IsStarted = false;
-            Stop();
+            StartStopButtonText = "START";
+            UpdateTimerDisplayText(); // Update display text when cleared
+        }
+
+        [RelayCommand(CanExecute = nameof(CanLog))]
+        private async void Log()
+        {
+            await LogService.LogTimeOnIssue(SelectedIssue.key, "1h", "");
+            elapsedTimeSpan = TimeSpan.Zero;
+            ElapsedTime = "00:00:00";
+            IsStarted = false;
+            StartStopButtonText = "START";
+            UpdateTimerDisplayText(); // Update display text when logged
         }
 
         private bool CanStart() => !IsStarted;
-        private bool CanStopOrCancel() => IsStarted;
+        private bool CanClear() => elapsedTimeSpan > TimeSpan.Zero;
+        private bool CanLog() => elapsedTimeSpan > TimeSpan.FromMinutes(0);
 
         partial void OnIsStartedChanged(bool isStarted)
         {
-            CancelCommand.NotifyCanExecuteChanged();
+            LogCommand.NotifyCanExecuteChanged();
+            ClearCommand.NotifyCanExecuteChanged();
         }
 
         partial void OnSelectedSprintChanged(Sprint value)

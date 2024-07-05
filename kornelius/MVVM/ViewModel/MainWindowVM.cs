@@ -2,11 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using kornelius.MVVM.Model;
 using kornelius.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace kornelius.ViewModel
 {
@@ -14,8 +9,10 @@ namespace kornelius.ViewModel
     {
         [ObservableProperty] private bool showSettings;
         [ObservableProperty] private bool isSettingsVisible;
+        [ObservableProperty] private string timerDisplayText;
 
         private INavigationService _navigation;
+        private readonly MainVM _mainVM;
 
         public INavigationService Navigation
         {
@@ -26,10 +23,21 @@ namespace kornelius.ViewModel
                 OnPropertyChanged();
             }
         }
-        public MainWindowVM(INavigationService navService)
+
+        public MainWindowVM(INavigationService navService, MainVM mainVM)
         {
             Navigation = navService;
+            _mainVM = mainVM;
             navService.NavigateTo<MainVM>();
+
+            // Subscribe to the TimerDisplayText property of MainVM
+            _mainVM.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(MainVM.TimerDisplayText))
+                {
+                    TimerDisplayText = _mainVM.TimerDisplayText;
+                }
+            };
         }
 
         [RelayCommand]
@@ -39,7 +47,6 @@ namespace kornelius.ViewModel
             if (IsSettingsVisible)
             {
                 Navigation.NavigateTo<MainVM>();
-
             }
             else
             {

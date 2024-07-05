@@ -72,4 +72,21 @@ public class JiraApiWrapper
         return await httpClient.GetAsync(url);
     }
     #endregion
+
+    #region POST
+    public async Task<HttpResponseMessage> LogTimeOnIssue(string issueKey, string timeSpent, string comment = "")
+    {
+        timeSpent = "1h";
+        var url = $"{httpClient.BaseAddress}rest/api/2/issue/{issueKey}/worklog";
+        var payload = new
+        {
+            timeSpent,
+            comment
+        };
+        var jsonPayload = JsonConvert.SerializeObject(payload);
+        var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+        return await httpClient.PostAsync(url, content);
+    }
+
+    #endregion
 }

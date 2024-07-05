@@ -20,7 +20,7 @@ namespace kornelius.Services
 
         private static readonly JiraApiWrapper JiraApiWrapper = new JiraApiWrapper(baseAddress, userName, apiKey);
 
-        public static async Task<IEnumerable<Issue>> GetIssuesForSprintByAssignee(int sprintId, string assignee)
+        public static async Task<IEnumerable<Issue>> GetIssuesForSprintAndAssignee(int sprintId, string assignee)
         {
             var jql = $"Sprint = {sprintId} AND assignee = {assignee}";
             var response = await JiraApiWrapper.GetIssues(jql);
